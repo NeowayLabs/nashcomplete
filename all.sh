@@ -1,7 +1,9 @@
 # nash-complete
 
+import deps
 import common
 import kill
+import history
 import files
 import programs
 

@@ -34,7 +34,7 @@ fn nash_complete(line, pos) {
 	IFS = ("\n")
 
 	if $line == "" {
-		# search backwards in the history
+		# search in the history
 		ret <= nash_complete_history()
 
 		return $ret

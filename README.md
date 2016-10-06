@@ -19,7 +19,7 @@ To setup the auto complete you only need to add an import line into your init sc
 ```sh
 # ~/.nash/init
 
-import nashcomplete/init
+import nashcomplete/all
 
 ```
 

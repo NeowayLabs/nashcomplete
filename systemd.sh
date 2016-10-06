@@ -10,9 +10,13 @@ fn nash_complete_systemctlopt(parts, line, pos) {
 		-fzf --header "Systemd options:"
 	)
 
+	if $status != "0" {
+		return $ret
+	}
+
 	choice <= trim($choice)
 
-	ret    = ($choice+" " "0")
+	ret = ($choice+" " "0")
 
 	return $ret
 }
@@ -36,12 +40,18 @@ fn nash_complete_systemctl(parts, line, pos) {
 				 |
 		sed "s#/.*/##g" |
 		sed "s/\\.service//g" |
-		fzf --header "select unit: "
+		-fzf --header "select unit: "
+					--reverse
+					-m
 	)
+
+	if $status != "0" {
+		return $ret
+	}
 
 	choice <= trim($choice)
 
-	ret    = ($choice "0")
+	ret = ($choice "0")
 
 	return $ret
 }

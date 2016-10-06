@@ -8,6 +8,11 @@ import history
 import files
 import programs
 
+NASHCOMPLETE_CMD = (
+	("kill" $nash_complete_kill)
+	("systemctl" $nash_complete_systemctl)
+)
+
 fn nash_complete_args(parts, line, pos) {
 	ret = ()
 
@@ -19,14 +24,15 @@ fn nash_complete_args(parts, line, pos) {
 
 	cmd = $parts[0]
 
-	if $cmd == "kill" {
-		ret <= nash_complete_kill($parts, $line, $pos)
+	for completecmd in $NASHCOMPLETE_CMD {
+		name     = $completecmd[0]
+		callback = $completecmd[1]
 
-		return $ret
-	} else if $cmd == "systemctl" {
-		ret <= nash_complete_systemctl($parts, $line, $pos)
+		if $cmd == $name {
+			ret <= $callback($parts, $line, $pos)
 
-		return $ret
+			return $ret
+		}
 	}
 
 	ret <= nash_complete_paths($parts, $line, $pos)

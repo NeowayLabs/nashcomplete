@@ -3,6 +3,7 @@
 import deps
 import common
 import kill
+import systemd
 import history
 import files
 import programs
@@ -20,6 +21,10 @@ fn nash_complete_args(parts, line, pos) {
 
 	if $cmd == "kill" {
 		ret <= nash_complete_kill($parts, $line, $pos)
+
+		return $ret
+	} else if $cmd == "systemctl" {
+		ret <= nash_complete_systemctl($parts, $line, $pos)
 
 		return $ret
 	}

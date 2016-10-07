@@ -16,9 +16,7 @@ NASHCOMPLETE_CMD = (
 fn nash_complete_args(parts, line, pos) {
 	ret = ()
 
-	partsz <= len($parts)
-
-	if $partsz == "0" {
+	if len($parts) == "0" {
 		return $ret
 	}
 
@@ -51,13 +49,12 @@ fn nash_complete(line, pos) {
 		return $ret
 	}
 
-	parts  <= echo $line | tr " " "\n"
-	partsz <= len($parts)
+	parts <= echo $line | tr " " "\n"
 
-	if $partsz == "0" {
+	if len($parts) == "0" {
 		# not sure when happens
 		return $ret
-	} else if $partsz == "1" {
+	} else if len($parts) == "1" {
 		echo $line | -grep " $" >[1=]
 
 		if $status != "0" {

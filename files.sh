@@ -30,6 +30,13 @@ fn nash_complete_paths(parts, line, pos) {
 		fname = ""
 	}
 
+	-test -d $dir
+
+	if $status != "0" {
+		# autocompleting non-existent directory
+		return $ret
+	}
+
 	choice <= (
 		find $dir -maxdepth 1 |
 		sed "s#"+$dir+"##g" |

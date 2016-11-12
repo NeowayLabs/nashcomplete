@@ -2,7 +2,7 @@
 
 The name says everything.
 
-[![asciicast](https://asciinema.org/a/enr2mrchewlezfproraoh4gdy.png)](https://asciinema.org/a/enr2mrchewlezfproraoh4gdy?autoplay=true)
+[![asciicast](https://asciinema.org/a/enr2mrchewlezfproraoh4gdy.png)](https://asciinema.org/a/enr2mrchewlezfproraoh4gdy?autoplay=true&speed=2)
 
 ## Installation
 

@@ -57,7 +57,7 @@ fn nash_complete_paths(parts, line, pos) {
 	-test -d $dir+$choice
 
 	if $status == "0" {
-		echo $choice | -grep "/$"
+		echo $choice | -grep "/$" >[1=]
 
 		if $status != "0" {
 			choice = $choice+"/"

@@ -55,7 +55,7 @@ fn nash_complete(line, pos) {
 		# not sure when happens
 		return $ret
 	} else if len($parts) == "1" {
-		echo $line | -grep "^\\."
+		echo $line | -grep "^\\." >[1=]
 
 		if $status == "0" {
 			ret <= nash_complete_paths($parts, $line, $pos)

@@ -40,7 +40,6 @@ import "nashcomplete/all"
 
 # The `parts` argument hold the line splited by space.
 fn docker_complete(parts, line, pos) {
-	IFS    = ()
 	ret    = ()
 
 	partsz <= len($parts)

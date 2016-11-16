@@ -10,7 +10,9 @@ fn getfzf() {
 
 		echo "fzf fuzzy finder not installed."
 		echo "Installing fzf..."
-		cd $HOME
+
+		chdir($HOME)
+
 		git clone --depth 1 https://github.com/junegunn/fzf.git .fzf
 		./.fzf/install --all >[1=] >[2=]
 

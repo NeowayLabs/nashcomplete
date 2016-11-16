@@ -40,7 +40,6 @@ fn nash_complete_args(parts, line, pos) {
 
 fn nash_complete(line, pos) {
 	ret = ()
-	IFS = ("\n")
 
 	if $line == "" {
 		# search in the history
@@ -49,7 +48,7 @@ fn nash_complete(line, pos) {
 		return $ret
 	}
 
-	parts <= echo $line | tr " " "\n"
+	parts <= split($line, " ")
 
 	if len($parts) == "0" {
 		# not sure when happens

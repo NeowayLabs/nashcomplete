@@ -1,7 +1,6 @@
 # Autocomplete of files
 
 fn nash_complete_paths(parts, line, pos) {
-	IFS      = ()
 	ret      = ()
 
 	partsz   <= len($parts)

@@ -2,7 +2,6 @@
 
 fn nash_complete_systemctlopt(parts, line, pos) {
 	ret    = ()
-	IFS    = ()
 
 	choice <= (
 		echo "sucks enable disable start stop reload-daemon" |
@@ -23,7 +22,6 @@ fn nash_complete_systemctlopt(parts, line, pos) {
 
 fn nash_complete_systemctl(parts, line, pos) {
 	ret    = ()
-	IFS    = ()
 
 	partsz <= len($parts)
 

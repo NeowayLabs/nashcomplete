@@ -2,7 +2,6 @@
 
 fn nash_complete_killopt(query, line, pos) {
 	ret      = ()
-	IFS      = ()
 	queryOpt = ()
 
 	if $query != "" {
@@ -34,7 +33,6 @@ fn nash_complete_killopt(query, line, pos) {
 
 fn nash_complete_kill(parts, line, pos) {
 	ret    = ()
-	IFS    = ()
 
 	partsz <= len($parts)
 
@@ -46,8 +44,6 @@ fn nash_complete_kill(parts, line, pos) {
 
 		return $ret
 	}
-
-	IFS = ()
 
 	last     <= -expr $partsz - 1
 	last     <= trim($last)

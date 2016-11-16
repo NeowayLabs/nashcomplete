@@ -2,7 +2,6 @@
 
 fn nash_complete_program(line, pos) {
 	ret    = ()
-	IFS    = ()
 
 	paths  <= getpaths()
 	choice <= (

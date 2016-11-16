@@ -2,7 +2,6 @@
 
 fn nash_complete_history() {
 	ret    = ()
-	IFS    = ()
 
 	choice <= (
 		cat $NASHPATH+"/history" |

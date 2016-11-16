@@ -1,12 +1,9 @@
 # Autocomplete of files
 
 fn nash_complete_paths(parts, line, pos) {
-	ret      = ()
-
 	partsz   <= len($parts)
 	last     <= -expr $partsz - 1
 	last     <= trim($last)
-
 	lastpart <= echo -n $parts[$last] | sed -r "s#^~#"+$HOME+"#g"
 
 	-test -d $lastpart
@@ -33,7 +30,7 @@ fn nash_complete_paths(parts, line, pos) {
 
 	if $status != "0" {
 		# autocompleting non-existent directory
-		return $ret
+		return ()
 	}
 
 	choice <= (
@@ -50,7 +47,7 @@ fn nash_complete_paths(parts, line, pos) {
 	)
 
 	if $status != "0" {
-		return $ret
+		return ()
 	}
 
 	-test -d $dir+$choice
@@ -65,7 +62,5 @@ fn nash_complete_paths(parts, line, pos) {
 
 	choice <= diffword($choice, $fname)
 
-	ret = ($choice "0")
-
-	return $ret
+	return ($choice "0")
 }

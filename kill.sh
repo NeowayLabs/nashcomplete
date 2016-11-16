@@ -1,7 +1,6 @@
 # Kill autocomplete
 
 fn nash_complete_killopt(query, line, pos) {
-	ret      = ()
 	queryOpt = ()
 
 	if $query != "" {
@@ -16,7 +15,7 @@ fn nash_complete_killopt(query, line, pos) {
 	)
 
 	if $status != "0" {
-		return $ret
+		return ()
 	}
 
 	choice <= trim($choice)
@@ -26,14 +25,10 @@ fn nash_complete_killopt(query, line, pos) {
 		sig <= diffword($sig, $query)
 	}
 
-	ret = ($sig+" " "0")
-
-	return $ret
+	return ($sig+" " "0")
 }
 
 fn nash_complete_kill(parts, line, pos) {
-	ret    = ()
-
 	partsz <= len($parts)
 
 	if $partsz == "0" {
@@ -86,7 +81,7 @@ fn nash_complete_kill(parts, line, pos) {
 	)
 
 	if $status != "0" {
-		return $ret
+		return ()
 	}
 
 	choice <= echo $choice | cut -d " " -f1 | tr "\n" " " | tr -s " "
@@ -95,7 +90,5 @@ fn nash_complete_kill(parts, line, pos) {
 		choice <= diffword($choice, $lastpart)
 	}
 
-	ret = ($choice "0")
-
-	return $ret
+	return ($choice "0")
 }

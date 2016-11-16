@@ -1,8 +1,6 @@
 # systemd related autocomplete
 
 fn nash_complete_systemctlopt(parts, line, pos) {
-	ret    = ()
-
 	choice <= (
 		echo "sucks enable disable start stop reload-daemon" |
 		tr " " "\n" |
@@ -10,19 +8,15 @@ fn nash_complete_systemctlopt(parts, line, pos) {
 	)
 
 	if $status != "0" {
-		return $ret
+		return ()
 	}
 
 	choice <= trim($choice)
 
-	ret = ($choice+" " "0")
-
-	return $ret
+	return ($choice+" " "0")
 }
 
 fn nash_complete_systemctl(parts, line, pos) {
-	ret    = ()
-
 	partsz <= len($parts)
 
 	if $partsz == "1" {
@@ -44,12 +38,10 @@ fn nash_complete_systemctl(parts, line, pos) {
 	)
 
 	if $status != "0" {
-		return $ret
+		return ()
 	}
 
 	choice <= trim($choice)
 
-	ret = ($choice "0")
-
-	return $ret
+	return ($choice "0")
 }

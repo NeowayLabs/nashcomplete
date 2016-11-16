@@ -1,8 +1,6 @@
 # autocomplete of system-wide binaries
 
 fn nash_complete_program(line, pos) {
-	ret    = ()
-
 	paths  <= getpaths()
 	choice <= (
 		find $paths -maxdepth 1 -type f |
@@ -18,12 +16,10 @@ fn nash_complete_program(line, pos) {
 	)
 
 	if $status != "0" {
-		return $ret
+		return ()
 	}
 
 	choice <= diffword($choice, $line)
 
-	ret = ($choice+" " "0")
-
-	return $ret
+	return ($choice+" " "0")
 }

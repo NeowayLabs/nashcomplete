@@ -1,8 +1,6 @@
 # history autocomplete
 
 fn nash_complete_history() {
-	ret    = ()
-
 	choice <= (
 		cat $NASHPATH+"/history" |
 		sort -u |
@@ -12,12 +10,10 @@ fn nash_complete_history() {
 	)
 
 	if $status != "0" {
-		return $ret
+		return ()
 	}
 
 	choice <= trim($choice)
 
-	ret = ($choice "0")
-
-	return $ret
+	return ($choice "0")
 }

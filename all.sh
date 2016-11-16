@@ -14,10 +14,8 @@ NASHCOMPLETE_CMD = (
 )
 
 fn nash_complete_args(parts, line, pos) {
-	ret = ()
-
 	if len($parts) == "0" {
-		return $ret
+		return ()
 	}
 
 	cmd = $parts[0]
@@ -39,8 +37,6 @@ fn nash_complete_args(parts, line, pos) {
 }
 
 fn nash_complete(line, pos) {
-	ret = ()
-
 	if $line == "" {
 		# search in the history
 		ret <= nash_complete_history()
@@ -52,7 +48,7 @@ fn nash_complete(line, pos) {
 
 	if len($parts) == "0" {
 		# not sure when happens
-		return $ret
+		return ()
 	} else if len($parts) == "1" {
 		echo $line | -grep "^\\." >[1=]
 

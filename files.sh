@@ -1,5 +1,40 @@
 # Autocomplete of files
 
+fn nash_complete_wildcard(line, dir, fname, pos) {
+	pat   <= echo $fname | sed "s/\\*/.*/g"
+	files <= ls $dir | grep "^"+$pat
+
+	if $status != "0" {
+		return ()
+	}
+
+	files <= split($files, "\n")
+
+	# used to calculate how many chars to override
+	tmp   <= echo $line | sed "s/[a-zA-Z-]*\\*.*//g"
+	pos   <= len($tmp)
+
+	out   = ""
+	first = "0"
+
+	for f in $files {
+		if $first == "0" {
+			comp <= echo -n $f | sed "s#"+$tmp+"##g"
+
+			out   = $out+$comp+" "
+			first = "1"
+		} else {
+			if $dir != "" {
+				out = $out+$dir+$f+" "
+			} else {
+				out = $out+$f+" "
+			}
+		}
+	}
+
+	return ($out $pos)
+}
+
 fn nash_complete_paths(parts, line, pos) {
 	partsz   <= len($parts)
 	last     <= -expr $partsz - 1
@@ -31,6 +66,12 @@ fn nash_complete_paths(parts, line, pos) {
 	if $status != "0" {
 		# autocompleting non-existent directory
 		return ()
+	}
+
+	echo -n $fname | -grep "\\*" >[1=]
+
+	if $status == "0" {
+		return nash_complete_wildcard($line, $dir, $fname, $pos)
 	}
 
 	choice <= (

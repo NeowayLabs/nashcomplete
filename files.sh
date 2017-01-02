@@ -10,18 +10,21 @@ fn nash_complete_paths(parts, line, pos) {
 
 	if $status == "0" {
 		# already a directory
+		echo -n $lastpart | -grep "/$" >[1=]
+
+		# complete with '/' if it wasnt given
+		if $status != "0" {
+			return ("/" "0")
+		}
+
 		dir   = $lastpart
 		fname = ""
 	} else {
 		dir   <= dirname $lastpart | tr -d "\n"
+		dir   = $dir+"/"
 		fname <= basename $lastpart | tr -d "\n"
 	}
 
-	echo -n $dir | -grep "/$" >[1=]
-
-	if $status != "0" {
-		dir = $dir+"/"
-	}
 	if $fname == "/" {
 		fname = ""
 	}

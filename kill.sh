@@ -73,7 +73,7 @@ fn nash_complete_kill(parts, line, pos) {
 		ps -eo "pid,ppid,user,pcpu,pmem,args"
 						--sort "%mem" |
 		tr -s " " |
-		sed -r "s/^ //g" |
+		sed $sedArgs "s/^ //g" |
 		-fzf --header $pidsHeader
 					--header-lines=1
 					-m

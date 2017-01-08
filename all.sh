@@ -8,6 +8,14 @@ import history
 import files
 import programs
 
+OS <= uname -s
+
+sedArgs = "-r"
+
+if $OS == "Darwin" {
+	sedArgs = "-E"
+}
+
 NASHCOMPLETE_CMD = (
 	("kill" $nash_complete_kill)
 	("systemctl" $nash_complete_systemctl)

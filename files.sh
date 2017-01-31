@@ -17,12 +17,13 @@ fn nash_complete_paths(parts, line, pos) {
 			return ("/" "0")
 		}
 
-		dir   = $lastpart
+		dir    = $lastpart
+		seddir = $dir
 		fname = ""
 	} else {
-		dir   <= dirname $lastpart | tr -d "\n"
-		dir   = $dir+"/"
-		fname <= basename $lastpart | tr -d "\n"
+		dir	 <= dirname $lastpart | tr -d "\n"
+		seddir = $dir+"/"
+		fname 	 <= basename $lastpart | tr -d "\n"
 	}
 
 	if $fname == "/" {
@@ -38,7 +39,7 @@ fn nash_complete_paths(parts, line, pos) {
 
 	choice <= (
 		find $dir -maxdepth 1 |
-		sed "s#"+$dir+"##g" |
+		sed "s#"+$seddir+"##g" |
 		-fzf -q "^"+$fname
 				-1
 				-0

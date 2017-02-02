@@ -11,20 +11,27 @@ fn nash_complete_paths(parts, line, pos) {
 	if $status == "0" {
 		# already a directory
 		echo -n $lastpart | -grep "/$" >[1=]
-
+		
 		# complete with '/' if it wasnt given
 		if $status != "0" {
 			return ("/" "0")
 		}
-
-		dir   = $lastpart
-		fname = ""
+		
+		dir <= echo $lastpart | sed $sedArgs "s#/$##g"
+		
+		dirpath = $dir+"/"
+		fname   = ""
 	} else {
-		dir   <= dirname $lastpart | tr -d "\n"
-		dir   = $dir+"/"
+		dir <= dirname $lastpart | tr -d "\n"
+		
+		if $dir != "/" {
+			dirpath = $dir+"/"
+		} else {
+			dirpath = $dir
+		}
+		
 		fname <= basename $lastpart | tr -d "\n"
 	}
-
 	if $fname == "/" {
 		fname = ""
 	}
@@ -38,7 +45,7 @@ fn nash_complete_paths(parts, line, pos) {
 
 	choice <= (
 		find $dir -maxdepth 1 |
-		sed "s#"+$dir+"##g" |
+		sed "s#"+$dirpath+"##g" |
 		-fzf -q "^"+$fname
 				-1
 				-0
@@ -57,7 +64,7 @@ fn nash_complete_paths(parts, line, pos) {
 
 	if $status == "0" {
 		echo $choice | -grep "/$" >[1=]
-
+		
 		if $status != "0" {
 			choice = $choice+"/"
 		}

@@ -1,7 +1,12 @@
 # Autocomplete of files
 
 fn nash_complete_wildcard(line, dir, fname, pos) {
-	pat   <= echo $fname | sed "s/\\*/.*/g"
+	echo $dir
+
+	pat <= echo $fname | sed "s/\\*/.*/g"
+
+	echo $pat
+
 	files <= ls $dir | grep "^"+$pat
 
 	if $status != "0" {

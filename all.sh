@@ -8,10 +8,40 @@ import history
 import files
 import programs
 
+GOBIN            = $GOPATH+"/bin"
+ENZOTOOLS = (
+	$GOBIN+"/ls"
+	$GOBIN+"/echo"
+	$GOBIN+"/cat"
+)
+
+UNIXTOOLS        = ("sed" "grep")
 NASHCOMPLETE_CMD = (
 	("kill" $nash_complete_kill)
 	("systemctl" $nash_complete_systemctl)
 )
+
+fn abort(msg) {
+	echo "error: "+$msg
+	abort
+}
+
+fn init() {
+	for tool in $ENZOTOOLS {
+		if file_exists($tool) != "0" {
+			abort("Enzo tools not installed: "+$tool+" not found")
+		}
+	}
+	for tool in $UNIXTOOLS {
+		which $tool >[1=]
+	}
+
+	paths <= split($PATH, ":")
+
+	if $paths[0] != $GOBIN {
+		abort($GOPATH+"/bin must precede other PATHs. Found "+$PATH)
+	}
+}
 
 fn nash_complete_args(parts, line, pos) {
 	if len($parts) == "0" {
@@ -71,3 +101,5 @@ fn nash_complete(line, pos) {
 
 	return $ret
 }
+
+init()

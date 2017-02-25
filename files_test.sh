@@ -2,7 +2,7 @@
 
 import "./all"
 
-fn fileTests() {
+fn wildcardTests() {
 	tmpFiles = (/tmp/a /tmp/aa /tmp/aaa /tmp/aaab /tmp/abaa)
 
 	touch $tmpFiles
@@ -13,4 +13,4 @@ fn fileTests() {
 	rm $tmpFiles
 }
 
-fileTests()
+wildcardTests()

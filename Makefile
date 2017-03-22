@@ -1,4 +1,4 @@
-.PHONY: deps install
+.PHONY: deps install all
 
 ifndef NASHPATH
 	$(error $$NASHPATH is not set)

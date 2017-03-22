@@ -2,7 +2,7 @@
 
 fn nash_complete_paths(parts, line, pos) {
 	partsz   <= len($parts)
-	last     <= -expr $partsz - 1
+	last     <= -echo $partsz - 1 | bc
 	last     <= trim($last)
 	lastpart <= echo -n $parts[$last] | sed $sedArgs "s#^~#"+$HOME+"#g"
 

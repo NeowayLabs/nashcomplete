@@ -9,9 +9,10 @@ The name says everything.
 First clone the repository:
 
 ```sh
-λ> mkdir -p $NASHPATH+"/lib"
-λ> cd $NASHPATH+"/lib"
-λ> git clone git@github.com:tiago4orion/nashcomplete.git
+λ> git clone git@github.com:NeowayLabs/nashcomplete.git
+λ> cd nashcomplete
+λ> make
+
 ```
 
 To setup the auto complete you only need to add an import line into your init script.

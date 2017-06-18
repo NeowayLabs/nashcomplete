@@ -1,10 +1,10 @@
 # systemd related autocomplete
 
 fn nash_complete_systemctlopt(parts, line, pos) {
-	choice <= (
+	var choice, status <= (
 		echo "sucks enable disable start stop reload-daemon" |
 		tr " " "\n" |
-		-fzf --header "Systemd options:"
+		fzf --header "Systemd options:"
 	)
 
 	if $status != "0" {
@@ -17,7 +17,7 @@ fn nash_complete_systemctlopt(parts, line, pos) {
 }
 
 fn nash_complete_systemctl(parts, line, pos) {
-	partsz <= len($parts)
+	var partsz <= len($parts)
 
 	if $partsz == "1" {
 		ret <= nash_complete_systemctlopt($parts, $line, $pos)
@@ -25,14 +25,14 @@ fn nash_complete_systemctl(parts, line, pos) {
 		return $ret
 	}
 
-	choice <= (
-		-find /etc/systemd/
+	var choice, status <= (
+		find /etc/systemd/
 				 |
-		-grep "service$"
+		grep "service$"
 				 |
 		sed "s#/.*/##g" |
 		sed "s/\\.service//g" |
-		-fzf --header "select unit: "
+		fzf --header "select unit: "
 					--reverse
 					-m
 	)

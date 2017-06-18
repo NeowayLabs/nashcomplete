@@ -1,12 +1,11 @@
 # check dependencies and download
-
-FZFPATH = $HOME+"/.fzf"
+var FZFPATH = $HOME+"/.fzf"
 
 fn getfzf() {
-	-test -d $FZFPATH
+	_, status <= test -d $FZFPATH
 
 	if $status != "0" {
-		oldpwd <= pwd | tr -d "\n"
+		var oldpwd <= pwd
 
 		echo "fzf fuzzy finder not installed."
 		echo "Installing fzf..."
@@ -21,7 +20,7 @@ fn getfzf() {
 }
 
 fn checkfzf() {
-	-which fzf >[1=] >[2=]
+	_, _, status <= which fzf
 
 	if $status != "0" {
 		getfzf()

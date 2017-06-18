@@ -1,63 +1,23 @@
 # Autocomplete of files
 
-fn nash_complete_wildcard(line, dir, fname, pos) {
-	echo $dir
+fn nash_complete_paths(parts, line, pos) {
+	var partsz <= len($parts)
+	var last <= -expr $partsz - 1
 
-	pat <= echo $fname | sed "s/\\*/.*/g"
+	last <= trim($last)
 
-	echo $pat
+	var lastpart <= echo -n $parts[$last] | sed -r "s#^~#"+$HOME+"#g"
+	var _, status <= test -d $lastpart
 
-	files <= ls $dir | grep "^"+$pat
+	var dir = $lastpart
+	var fname = ""
 
 	if $status != "0" {
-		return ()
+		dir   <= dirname $lastpart
+		fname <= basename $lastpart
 	}
 
-	files <= split($files, "\n")
-
-	# used to calculate how many chars to override
-	tmp   <= echo $line | sed "s/[a-zA-Z-]*\\*.*//g"
-	pos   <= len($tmp)
-
-	out   = ""
-	first = "0"
-
-	for f in $files {
-		if $first == "0" {
-			comp <= echo -n $f | sed "s#"+$tmp+"##g"
-
-			out   = $out+$comp+" "
-			first = "1"
-		} else {
-			if $dir != "" {
-				out = $out+$dir+$f+" "
-			} else {
-				out = $out+$f+" "
-			}
-		}
-	}
-
-	return ($out $pos)
-}
-
-fn nash_complete_paths(parts, line, pos) {
-	partsz   <= len($parts)
-	last     <= -expr $partsz - 1
-	last     <= trim($last)
-	lastpart <= echo -n $parts[$last] | sed -r "s#^~#"+$HOME+"#g"
-
-	-test -d $lastpart
-
-	if $status == "0" {
-		# already a directory
-		dir   = $lastpart
-		fname = ""
-	} else {
-		dir   <= dirname $lastpart | tr -d "\n"
-		fname <= basename $lastpart | tr -d "\n"
-	}
-
-	echo -n $dir | -grep "/$" >[1=]
+	_, status <= echo -n $dir | -grep "/$"
 
 	if $status != "0" {
 		dir = $dir+"/"
@@ -66,23 +26,17 @@ fn nash_complete_paths(parts, line, pos) {
 		fname = ""
 	}
 
-	-test -d $dir
+	_, status <= test -d $dir
 
 	if $status != "0" {
 		# autocompleting non-existent directory
 		return ()
 	}
 
-	echo -n $fname | -grep "\\*" >[1=]
-
-	if $status == "0" {
-		return nash_complete_wildcard($line, $dir, $fname, $pos)
-	}
-
-	choice <= (
+	var choice, status <= (
 		find $dir -maxdepth 1 |
 		sed "s#"+$dir+"##g" |
-		-fzf -q "^"+$fname
+		fzf -q "^"+$fname
 				-1
 				-0
 				--header "Looking for path"
@@ -96,10 +50,10 @@ fn nash_complete_paths(parts, line, pos) {
 		return ()
 	}
 
-	-test -d $dir+$choice
+	_, status <= test -d $dir+$choice
 
 	if $status == "0" {
-		echo $choice | -grep "/$" >[1=]
+		_, status <= echo $choice | -grep "/$"
 
 		if $status != "0" {
 			choice = $choice+"/"

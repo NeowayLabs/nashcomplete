@@ -1,12 +1,12 @@
 # autocomplete of system-wide binaries
 
 fn nash_complete_program(line, pos) {
-	paths  <= getpaths()
-	choice <= (
+	var paths <= getpaths()
+	var choice, status <= (
 		find $paths -maxdepth 1 -type f |
 		sed "s#/.*/##g" |
 		sort -u |
-		-fzf -q "^"+$line
+		fzf -q "^"+$line
 				-1
 				-0
 				--header "Looking for system-wide binaries"

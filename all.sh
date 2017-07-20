@@ -8,34 +8,23 @@ import history
 import files
 import programs
 
-var GOBIN = $GOPATH+"/bin"
-var ENZOTOOLS = ($GOBIN+"/ls" $GOBIN+"/echo" $GOBIN+"/cat")
-var UNIXTOOLS = ("sed" "grep")
+var UNIXTOOLS = ("ls" "echo" "cat" "sed" "grep")
 var NASHCOMPLETE_CMD = (
 	("kill" $nash_complete_kill)
 	("systemctl" $nash_complete_systemctl)
 )
 
 fn abort(msg) {
-	echo "error: "+$msg
-
-	exit(1)
+	print("[nashcomplete] error: %s\n", $msg)
 }
 
 fn init() {
-	for tool in $ENZOTOOLS {
-		if file_exists($tool) != "0" {
-			abort("Enzo tools not installed: "+$tool+" not found")
-		}
-	}
 	for tool in $UNIXTOOLS {
-		which $tool >[1=]
-	}
+		var _, status <= which $tool >[2=]
 
-	paths <= split($PATH, ":")
-
-	if $paths[0] != $GOBIN {
-		abort($GOPATH+"/bin must precede other PATHs. Found "+$PATH)
+		if $status != "0" {
+			abort("Unix tool not installed: "+$tool+" not found")
+		}
 	}
 }
 
@@ -45,52 +34,58 @@ fn nash_complete_args(parts, line, pos) {
 	}
 
 	var cmd = $parts[0]
+	var name = ""
+	var callback = ""
+	var ret = ""
 
 	for completecmd in $NASHCOMPLETE_CMD {
-		var name = $completecmd[0]
-		var callback = $completecmd[1]
+		name     = $completecmd[0]
+		callback = $completecmd[1]
 
 		if $cmd == $name {
-			var ret <= $callback($parts, $line, $pos)
-
+			ret <= $callback($parts, $line, $pos)
+			
 			return $ret
 		}
 	}
 
-	var ret <= nash_complete_paths($parts, $line, $pos)
+	ret <= nash_complete_paths($parts, $line, $pos)
 
 	return $ret
 }
 
 fn nash_complete(line, pos) {
+	var ret = ""
+	var parts = ""
+
 	if $line == "" {
 		# search in the history
-		var ret <= nash_complete_history()
-
+		ret <= nash_complete_history()
+		
 		return $ret
 	}
 
-	var parts <= split($line, " ")
+	parts <= split($line, " ")
 
-	var ret = ()
+	ret = ()
 
 	if len($parts) == "0" {
 		# not sure when happens
 		return ()
 	} else if len($parts) == "1" {
 		_, status <= echo $line | grep "^\\."
-
+		
 		if $status == "0" {
 			ret <= nash_complete_paths($parts, $line, $pos)
-
+			
 			return $ret
 		}
-
+		
 		_, status <= echo $line | -grep " $"
-
+		
 		if $status != "0" {
 			ret <= nash_complete_program($line, $pos)
-
+			
 			return $ret
 		}
 	}

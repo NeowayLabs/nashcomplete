@@ -8,15 +8,15 @@ import history
 import files
 import programs
 
-OS <= uname -s
+var OS <= uname -s
 
-sedArgs = "-r"
+var sedArgs = "-r"
 
 if $OS == "Darwin" {
 	sedArgs = "-E"
 }
 
-NASHCOMPLETE_CMD = (
+var NASHCOMPLETE_CMD = (
 	("kill" $nash_complete_kill)
 	("systemctl" $nash_complete_systemctl)
 )
@@ -26,15 +26,16 @@ fn nash_complete_args(parts, line, pos) {
 		return ()
 	}
 
-	cmd = $parts[0]
+	var cmd = $parts[0]
 
 	for completecmd in $NASHCOMPLETE_CMD {
-		name     = $completecmd[0]
-		callback = $completecmd[1]
+		var name = $completecmd[0]
+		var callback = $completecmd[1]
+		var ret = ""
 
 		if $cmd == $name {
-			ret <= $callback($parts, $line, $pos)
-
+			var ret <= $callback($parts, $line, $pos)
+			
 			return $ret
 		}
 	}
@@ -45,32 +46,34 @@ fn nash_complete_args(parts, line, pos) {
 }
 
 fn nash_complete(line, pos) {
+	var ret = ""
+
 	if $line == "" {
 		# search in the history
 		ret <= nash_complete_history()
-
+		
 		return $ret
 	}
 
-	parts <= split($line, " ")
+	var parts <= split($line, " ")
 
 	if len($parts) == "0" {
 		# not sure when happens
 		return ()
 	} else if len($parts) == "1" {
-		echo $line | -grep "^\\." >[1=]
-
+		var _, status <= echo $line | -grep "^\\." >[1=]
+		
 		if $status == "0" {
 			ret <= nash_complete_paths($parts, $line, $pos)
-
+			
 			return $ret
 		}
-
-		echo $line | -grep " $" >[1=]
-
+		
+		var _, status <= echo $line | -grep " $" >[1=]
+		
 		if $status != "0" {
 			ret <= nash_complete_program($line, $pos)
-
+			
 			return $ret
 		}
 	}

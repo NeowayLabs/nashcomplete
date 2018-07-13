@@ -1,12 +1,16 @@
 # Autocomplete of files
 
 fn nash_complete_paths(parts, line, pos) {
-	partsz   <= len($parts)
-	last     <= -expr $partsz - 1
-	last     <= trim($last)
-	lastpart <= echo -n $parts[$last] | sed $sedArgs "s#^~#"+$HOME+"#g"
+	var partsz <= len($parts)
+	var last <= -expr $partsz - 1
+	var last <= trim($last)
+	var lastpart <= echo -n $parts[$last] | sed $sedArgs "s#^~#"+$HOME+"#g"
 
-	-test -d $lastpart
+	var dir = ""
+	var fname = ""
+	var dirpath = ""
+
+	var _, status <= test -d $lastpart
 
 	if $status == "0" {
 		# already a directory
@@ -36,14 +40,14 @@ fn nash_complete_paths(parts, line, pos) {
 		fname = ""
 	}
 
-	-test -d $dir
+	var _, status <= test -d $dir
 
 	if $status != "0" {
 		# autocompleting non-existent directory
 		return ()
 	}
 
-	choice <= (
+	var choice, status <= (
 		find $dir -maxdepth 1 |
 		sed "s#"+$dirpath+"##g" |
 		-fzf -q "^"+$fname
@@ -60,7 +64,7 @@ fn nash_complete_paths(parts, line, pos) {
 		return ()
 	}
 
-	-test -d $dir+$choice
+	var _, status <= test -d $dir+$choice
 
 	if $status == "0" {
 		echo $choice | -grep "/$" >[1=]

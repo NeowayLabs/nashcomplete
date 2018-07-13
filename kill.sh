@@ -1,7 +1,8 @@
 # Kill autocomplete
 
 fn nash_complete_killopt(query, line, pos) {
-	queryOpt = ()
+	var queryOpt = ()
+	var choice = ""
 
 	if $query != "" {
 		queryOpt = ("-q" "^"+$query)
@@ -19,7 +20,8 @@ fn nash_complete_killopt(query, line, pos) {
 	}
 
 	choice <= trim($choice)
-	sig    <= echo $choice | cut -d " " -f1 | tr -d "\n"
+
+	var sig <= echo $choice | cut -d " " -f1 | tr -d "\n"
 
 	if $query != "" {
 		sig <= diffword($sig, $query)
@@ -29,29 +31,33 @@ fn nash_complete_killopt(query, line, pos) {
 }
 
 fn nash_complete_kill(parts, line, pos) {
-	partsz <= len($parts)
+	var partsz <= len($parts)
+
+	var ret = ""
+	var last = ""
+	var choice = ""
 
 	if $partsz == "0" {
 		return $ret
 	}
 	if $partsz == "1" {
 		ret <= nash_complete_killopt("", $line, $pos)
-
+		
 		return $ret
 	}
 
-	last     <= -expr $partsz - 1
-	last     <= trim($last)
+	last <= -expr $partsz - 1
+	last <= trim($last)
 
-	lastpart = $parts[$last]
-	query    = ()
-	querylen = "0"
+	var lastpart = $parts[$last]
+	var query = ()
+	var querylen = "0"
 
-	echo $lastpart | -grep "^-$" >[1=]
+	var _, status <= echo $lastpart | grep "^-$" >[1=]
 
 	if $status == "0" {
 		ret <= nash_complete_killopt($lastpart, $line, $pos)
-
+		
 		return $ret
 	}
 
@@ -59,17 +65,17 @@ fn nash_complete_kill(parts, line, pos) {
 
 	if $status != "0" {
 		echo $line | -grep " $" >[1=]
-
+		
 		if $status != "0" {
 			query    = ("-q" "^"+$lastpart)
 			querylen = "2"
 		}
 	}
 
-	pidsHeader = "select processes: (mark multiples with TAB)"
+	var pidsHeader = "select processes: (mark multiples with TAB)"
 
 	# autocomplete pids
-	choice <= (
+	choice, status <= (
 		ps -eo "pid,ppid,user,pcpu,pmem,args"
 						--sort "%mem" |
 		tr -s " " |

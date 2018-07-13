@@ -1,9 +1,11 @@
 # autocomplete of system-wide binaries
 
 fn nash_complete_program(line, pos) {
-	paths  <= getpaths()
-	choice <= (
-		find $paths -maxdepth 1 -type f |
+	var paths <= getpaths()
+	var choice, status <= (
+		find $paths -maxdepth 1 -type f
+					>[2=] |
+		grep -v find |
 		sed "s#/.*/##g" |
 		sort -u |
 		-fzf -q "^"+$line
@@ -12,7 +14,7 @@ fn nash_complete_program(line, pos) {
 				--header "Looking for system-wide binaries"
 				--prompt "(λ programs)>"
 				--reverse
-
+				
 	)
 
 	if $status != "0" {

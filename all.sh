@@ -35,7 +35,7 @@ fn nash_complete_args(parts, line, pos) {
 
 		if $cmd == $name {
 			var ret <= $callback($parts, $line, $pos)
-			
+
 			return $ret
 		}
 	}
@@ -51,7 +51,7 @@ fn nash_complete(line, pos) {
 	if $line == "" {
 		# search in the history
 		ret <= nash_complete_history()
-		
+
 		return $ret
 	}
 
@@ -61,19 +61,19 @@ fn nash_complete(line, pos) {
 		# not sure when happens
 		return ()
 	} else if len($parts) == "1" {
-		var _, status <= echo $line | -grep "^\\." >[1=]
-		
+		var _, status <= echo $line | grep "^\\." >[1=]
+
 		if $status == "0" {
 			ret <= nash_complete_paths($parts, $line, $pos)
-			
+
 			return $ret
 		}
-		
-		var _, status <= echo $line | -grep " $" >[1=]
-		
+
+		var _, status <= echo $line | grep " $" >[1=]
+
 		if $status != "0" {
 			ret <= nash_complete_program($line, $pos)
-			
+
 			return $ret
 		}
 	}

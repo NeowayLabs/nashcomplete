@@ -2,17 +2,57 @@
 
 fn nash_complete_killopt(query, line, pos) {
 	var queryOpt = ()
-	var choice = ""
 
 	if $query != "" {
 		queryOpt = ("-q" "^"+$query)
 	}
 
-	choice <= (
-		echo "-1 HUP\n-2 INT\n-3 QUIT\n-4 ILL\n-5 TRAP\n-6 ABRT\n-6 IOT\n-7 BUS\n-8 FPE\n-9 KILL\n-10 USR1\n-11 SEGV\n-12 USR2\n-13 PIPE\n-14 ALRM\n-15 TERM\n-16 STKFLT\n-17 CHLD\n-17 CLD\n-18 CONT\n-19 STOP\n-20 TSTP\n-21 TTIN\n-22 TTOU\n-23 URG\n-24 XCPU\n-25 XFSZ\n-26 VTALRM\n-27 PROF\n-28 WINCH\n-29 IO\n-29 POLL\n-30 PWR\n-31 UNUSED\n-31 SYS\n-34 RTMIN\n-64 RTMAX" |
+	var optlist = (
+		"-1 HUP"
+		"-2 INT"
+		"-3 QUIT"
+		"-4 ILL"
+		"-5 TRAP"
+		"-6 ABRT"
+		"-6 IOT"
+		"-7 BUS"
+		"-8 FPE"
+		"-9 KILL"
+		"-10 USR1"
+		"-11 SEGV"
+		"-12 USR2"
+		"-13 PIPE"
+		"-14 ALRM"
+		"-15 TERM"
+		"-16 STKFLT"
+		"-17 CHLD"
+		"-17 CLD"
+		"-18 CONT"
+		"-19 STOP"
+		"-20 TSTP"
+		"-21 TTIN"
+		"-22 TTOU"
+		"-23 URG"
+		"-24 XCPU"
+		"-25 XFSZ"
+		"-26 VTALRM"
+		"-27 PROF"
+		"-28 WINCH"
+		"-29 IO"
+		"-29 POLL"
+		"-30 PWR"
+		"-31 UNUSED"
+		"-31 SYS"
+		"-34 RTMIN"
+		"-64 RTMAX"
+	)
+
+	var options <= join($optlist, "\n")
+
+	var choice, status <= (
+		echo $options |
 		-fzf --reverse
-			--header
-			"Select signal: " $queryOpt
+			 --header "Select signal: " $queryOpt
 	)
 
 	if $status != "0" {
@@ -35,14 +75,13 @@ fn nash_complete_kill(parts, line, pos) {
 
 	var ret = ""
 	var last = ""
-	var choice = ""
 
 	if $partsz == "0" {
 		return $ret
 	}
 	if $partsz == "1" {
 		ret <= nash_complete_killopt("", $line, $pos)
-		
+
 		return $ret
 	}
 
@@ -57,7 +96,7 @@ fn nash_complete_kill(parts, line, pos) {
 
 	if $status == "0" {
 		ret <= nash_complete_killopt($lastpart, $line, $pos)
-		
+
 		return $ret
 	}
 
@@ -65,7 +104,7 @@ fn nash_complete_kill(parts, line, pos) {
 
 	if $status != "0" {
 		echo $line | -grep " $" >[1=]
-		
+
 		if $status != "0" {
 			query    = ("-q" "^"+$lastpart)
 			querylen = "2"
@@ -75,9 +114,8 @@ fn nash_complete_kill(parts, line, pos) {
 	var pidsHeader = "select processes: (mark multiples with TAB)"
 
 	# autocomplete pids
-	choice, status <= (
-		ps -eo "pid,ppid,user,pcpu,pmem,args"
-						--sort "%mem" |
+	var choice, status <= (
+		ps -e -o "pid,ppid,user,pcpu,pmem,args" -m |
 		tr -s " " |
 		sed $sedArgs "s/^ //g" |
 		-fzf --header $pidsHeader

@@ -2,8 +2,6 @@
 
 The name says everything.
 
-[![asciicast](https://asciinema.org/a/enr2mrchewlezfproraoh4gdy.png)](https://asciinema.org/a/enr2mrchewlezfproraoh4gdy?autoplay=true&speed=1.5)
-
 ## Installation
 
 First clone the repository:
@@ -11,7 +9,7 @@ First clone the repository:
 ```sh
 λ> mkdir -p $NASHPATH+"/lib"
 λ> cd $NASHPATH+"/lib"
-λ> git clone git@github.com:NeowayLabs/nashcomplete.git
+λ> git clone git@github.com:madlambda/nashcomplete.git
 ```
 
 To setup the auto complete you only need to add an import line into your init script.

@@ -24,3 +24,14 @@ var paths <= split($path, ":")
 fn getpaths() {
 	return $paths
 }
+
+
+fn join(list, sep) {
+	var str = ""
+
+	for l in $list {
+		str = $str + $l + $sep
+	}
+
+	return $str
+}

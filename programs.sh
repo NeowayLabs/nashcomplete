@@ -3,14 +3,13 @@
 fn nash_complete_program(line, pos) {
 	var paths <= getpaths()
 	var choice, status <= (
-		find $paths -maxdepth 1 -type f
-					>[2=] |
-		grep -v find |
+		find $paths -maxdepth 1 -type f -follow
+						>[2=] |
 		sed "s#/.*/##g" |
-		sort -u |
-		-fzf -q "^"+$line
-				-1
-				-0
+		sort --unique |
+		fzf --query "^"+$line
+				--select-1
+				--exit-0
 				--header "Looking for system-wide binaries"
 				--prompt "(λ programs)>"
 				--reverse

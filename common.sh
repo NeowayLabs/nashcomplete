@@ -1,10 +1,5 @@
 # common functions
 
-fn cleanpath() {
-	var ret <= echo $PATH | sed "s/^://g" | sed "s/:$//g"
-
-	return $ret
-}
 
 fn trim(value) {
 	var value <= echo $value | tr -d "\n"
@@ -17,14 +12,6 @@ fn diffword(complete, line) {
 
 	return $diff
 }
-
-var path <= cleanpath()
-var paths <= split($path, ":")
-
-fn getpaths() {
-	return $paths
-}
-
 
 fn join(list, sep) {
 	var str = ""
